@@ -1,6 +1,6 @@
 <template>
   <footer class="footer_guide border-1px">
-    <a href="javascript:;" class="guide_item" :class="{on:$route.path==='/msite'}" @click="goTo('/miste')">
+    <a href="javascript:;" class="guide_item" :class="{on:$route.path==='/msite'}" @click="goTo('/msite')">
       <span class="item_icon">
         <i class="iconfont icon-waimai"></i>
       </span>
