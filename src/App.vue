@@ -8,6 +8,10 @@
 <script type="text/ecmascript-6">
   import FooterGuide from 'components/FooterGuide/FooterGuide.vue'
   export default {
+    mounted () {
+      this.$store.dispatch('getAddress')
+      this.$store.dispatch('getCategorys')
+    },
     components:{
       FooterGuide
     }
