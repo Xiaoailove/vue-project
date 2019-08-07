@@ -12,7 +12,7 @@
         <form>
           <div class="on">
             <section class="login_message">
-              <input type="tel" maxlength="11" placeholder="手机号">
+              <input type="tel" maxlength="11" placeholder="手机号" v-model="phone" @click="clickA">
               <button disabled="disabled" class="get_verification">获取验证码</button>
             </section>
             <section class="login_verification">
@@ -53,6 +53,16 @@
 </template>
 <script type="text/ecmascript-6">
   export default {
+    data () {
+      return {
+          phone:''
+      }
+    },
+    methods:{
+      clickA () {
+        
+      }
+    }
   }
 </script>
 

@@ -12,13 +12,15 @@ export default {
 			commit(RECEIVE_ADDRESS,address)
 		}
 	},
-	async getCategorys ({commit}) {
+	async getCategorys ({commit},callback) {
 		//调用接口地址发送请求函数
 		const result= await reqCategorys()
 		//拿到数据之后调用commit通知mutation更新数据
 		if(result.code===0){
 			const categorys=result.data
 			commit(RECEIVE_CATEGORYS,categorys)
+			//在commit之后执行回调函数此时数据已经回来了
+			typeof callback==='function' && callback()
 		}
 	},
 	async getShops ({commit,state}) {
