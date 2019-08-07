@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import Header from 'components/Header/Header.vue'//注册全局头部组件
-import './api'
+//import './api'
+import store from './store'
 
 Vue.config.productionTip = false//禁止在启动vue的时候产生提示，去掉打印提示
 Vue.component('Header',Header)//注册全局头部组件
@@ -14,5 +15,6 @@ new Vue({
   // template: '<App/>',
   //第二种方式//使用一个渲染的函数
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app')
