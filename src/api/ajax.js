@@ -4,6 +4,7 @@
 //统一处理请求错误：响应拦截器失败的回调
 import axios from 'axios'
 import qs from 'qs'
+axios.defaults.timeout=20000
 //添加请求拦截器
 axios.interceptors.request.use(config=>{
     //首先从我们发送post请求的时候传入的配置对象中拿到method和data携带的参数数据

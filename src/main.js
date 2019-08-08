@@ -5,6 +5,7 @@ import Header from 'components/Header/Header.vue'//注册全局头部组件
 import Star from 'components/Star/Star.vue'//注册全局星星组件因为星星组件在很多第三会用到，因此需要注册全局组件
 //import './api'
 import store from './store'
+import './validate'  //全局引入之后也就是说我全局多了一个validate的指令供我使用但是我没有向外面暴露什么所以不用上面的写法
 
 Vue.config.productionTip = false//禁止在启动vue的时候产生提示，去掉打印提示
 Vue.component('Header',Header)//注册全局头部组件
