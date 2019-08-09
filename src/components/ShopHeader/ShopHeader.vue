@@ -41,7 +41,8 @@
         {{info.supports.length}}个优惠
       </div>
     </div>
-    <div class="shop-brief-modal"  v-show="isShowBulletin">
+    <transition name="fade">
+      <div class="shop-brief-modal"  v-show="isShowBulletin">
       <div class="brief-modal-content">
         <h2 class="content-title">
           <span class="content-tag">
@@ -82,24 +83,27 @@
       </div>
       <div class="brief-modal-cover" @click="isShowBulletin=false"></div>
     </div>
-    <div class="activity-sheet" v-show="isShowSupports">
-      <div class="activity-sheet-content">
-        <h2 class="activity-sheet-title">
-        优惠活动</h2>
-        <ul class="list">
-          <li class="activity-item"  :class="supportClasses[support.type]" v-for="(support, index) in info.supports" :key="index">
-            <span class="content-tag">
-              <span class="mini-tag">{{support.name}}</span>
-            </span>
-            <span class="activity-content">{{support.content}}</span>
-          </li>
-        </ul>
-        <div class="activity-sheet-close" @click="isShowSupports=false">
-          <span class="iconfont icon-close"></span>
+    </transition>
+    <transition name="move">
+      <div class="activity-sheet" v-show="isShowSupports">
+        <div class="activity-sheet-content">
+          <h2 class="activity-sheet-title">
+          优惠活动</h2>
+          <ul class="list">
+            <li class="activity-item"  :class="supportClasses[support.type]" v-for="(support, index) in info.supports" :key="index">
+              <span class="content-tag">
+                <span class="mini-tag">{{support.name}}</span>
+              </span>
+              <span class="activity-content">{{support.content}}</span>
+            </li>
+          </ul>
+          <div class="activity-sheet-close" @click="isShowSupports=false">
+            <span class="iconfont icon-close"></span>
+          </div>
         </div>
+        <div class="activity-sheet-cover" @click="isShowSupports=false"></div>
       </div>
-      <div class="activity-sheet-cover" @click="isShowSupports=false"></div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -314,6 +318,10 @@
       z-index 52
       flex-direction column
       color #333
+      &.fade-enter-active, &.fade-leave-active
+        transition: opacity .5s
+      &.fade-enter, &.fade-leave-to
+        opacity: 0
       .brief-modal-cover
         position absolute
         width 100%
@@ -417,8 +425,8 @@
       height 100%
       z-index 99
       &.move-enter-active, &.move-leave-active
-        transition opacity .3s
-      &.move-enter-active, &.move-leave-active
+        transition opacity 1s
+      &.move-enter, &.move-leave-to
         opacity 0
       .activity-sheet-content
         position absolute
