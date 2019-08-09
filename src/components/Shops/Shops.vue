@@ -65,9 +65,11 @@
 <script type="text/ecmascript-6">
 	import {mapState} from 'vuex'
   export default {
-		computed:{
-			...mapState(['shops'])
-		}
+		computed: {
+      ...mapState({
+        shops: state => state.msite.shops
+      })
+    }
   }
 </script>
 

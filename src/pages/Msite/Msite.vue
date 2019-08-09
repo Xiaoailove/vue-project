@@ -74,7 +74,11 @@
       // },1000)
     },
     computed:{
-      ...mapState(['address','categorys']),
+      //...mapState(['address','categorys']),
+      ...mapState({
+        address:state=>state.msite.address,
+        categorys:state=>state.msite.categorys
+      }),
       categorysArr () {
         //第一种方法切割数组利用lodash库
         //return chunck(this.categorys,8)

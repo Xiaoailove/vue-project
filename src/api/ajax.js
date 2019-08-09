@@ -22,7 +22,7 @@ axios.interceptors.request.use(config=>{
 		}
 		//4. 如果需要携带token的请求, 从state中取出token
 		if (config.headers.needToken) {
-			const token=store.state.token
+			const token=store.state.user.token
 			if(!token){
 				const error=new Error('没有token, 不能发请求')
 				error.status=401
