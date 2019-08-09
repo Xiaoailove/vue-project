@@ -21,7 +21,7 @@
             </section>
             <section class="login_verification">
               <input type="tel" maxlength="8" placeholder="验证码" name="code" 
-              v-validate="{required: true, regex: /^\d{6}$/}">
+              v-validate="{required: true, regex: /^\d{6}$/}" v-model="code">
               <span style="color:red">{{errors.first('code')}}</span>
             </section>
             <section class="login_hint">
@@ -32,12 +32,13 @@
           <div :class="{on:!loginWay}">
             <section>
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="用户名" name="用户名" v-validate="'required'">
+                <input type="tel" maxlength="11" placeholder="用户名" name="用户名" 
+                v-validate="'required'" v-model="name">
                 <span style="color:red">{{errors.first('用户名')}}</span>
               </section>
               <section class="login_verification">
                 <input :type="isShowPwd?'text':'password'" maxlength="8" placeholder="密码" 
-                name="密码" v-validate="'required'">
+                name="密码" v-validate="'required'" v-model="pwd">
                 <div class="switch_button" @click="isShowPwd=!isShowPwd" :class="isShowPwd?'on' : 'off'">
                   <div class="switch_circle" :class="{right:isShowPwd}"></div>
                   <span class="switch_text">{{isShowPwd?'abc':''}}</span>
@@ -46,7 +47,7 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" name="验证码" 
-                v-validate="{required: true, regex: /^.{4}$/}">
+                v-validate="{required: true, regex: /^.{4}$/}" v-model="captcha">
                 <span style="color:red">{{errors.first('验证码')}}</span>
                 <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha" 
                 @click="updateCaptcha" ref="captcha">
@@ -64,12 +65,17 @@
   </section>
 </template>
 <script type="text/ecmascript-6">
-import { setInterval, clearInterval } from 'timers';
+import {Toast,MessageBox} from 'mint-ui'
+import { reqSendCode,reqSmsLogin,reqPwdLogin } from '../../api'
   export default {
     data () {
       return {
           loginWay:true,
           phone:'',
+          code:'',
+          name:'',
+          pwd:'',
+          captcha:'',
           computeTime:0,
           isShowPwd:false
       }
@@ -78,34 +84,62 @@ import { setInterval, clearInterval } from 'timers';
       isRightPhone () {
         return /^1\d{10}$/.test(this.phone)
       },
-
     },
     methods:{
-      sendCode () {
+     async sendCode () {
+       const {phone} =this
         this.computeTime=10
        const timerId=setInterval(()=>{
          //clearInterval(timerId)
-          this.computeTime--
           //当时间倒计时为0的时候自动停止定时器
           if(this.computeTime===0){
             clearInterval(timerId)
           }
+          this.computeTime--
         },1000)
+        const result= await reqSendCode(phone)
+        if (result.code===0) {
+          //alert('短信已成功发送')
+          Toast('短信已发送')
+        }else{
+          this.computeTime=0
+          //alert(result.msg)
+          MessageBox(result.msg)
+        }
       },
       goBack (path) {
         this.$router.push(path)
       },
      async login () {
-        const {loginWay}=this
+        const {loginWay,phone,code,name,pwd,captcha}=this
         let names
-        if (loginWay) {
+        let result
+        if (loginWay) {//短信登录
           names=['phone','code']
+          result=await reqSmsLogin(phone,code)
+          if(!phone||!code){
+            this.$validator.validateAll(names)
+          }else{
+             MessageBox.alert(result.code===1 ? result.msg :'登录成功' )
+          }
         }else{
           names=['用户名','密码','验证码']
+          result=await reqPwdLogin({name,pwd,captcha})
+          if (result.code===1) {
+            this.updateCaptcha()
+          }
+          if (!name||!pwd||!captcha) {
+            this.$validator.validateAll(names)
+          }else{
+             MessageBox.alert(result.code===1 ? result.msg :'登录成功' )
+          }
         }
-        const success = await this.$validator.validateAll(names)
-        if (success) {
-          alert('表单验证通过，发送登录请求')
+        if(result.code===0){
+          //将user保存到state中去
+          const user=result.data
+          this.$store.dispatch('saveUser',user)
+          //跳转到个人中心
+          this.$router.replace('/profile')
         }
       },
       updateCaptcha () {

@@ -5,4 +5,6 @@ export default {
   address: {}, // 地址信息对象
   categorys: [], // 分类数组
   shops: [], //商家数组
+  user:{},//保存当前登录对象
+  token:localStorage.getItem('token')
 }
