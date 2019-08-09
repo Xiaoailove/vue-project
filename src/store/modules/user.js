@@ -8,7 +8,6 @@ import {
 	RESET_TOKEN,
 } from '../mutations-types'
 const state={
-	shops: [], //商家数组
   user:{},//保存当前登录对象
   token:localStorage.getItem('token'),
 }
