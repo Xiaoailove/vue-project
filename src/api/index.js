@@ -48,6 +48,16 @@ export const reqAutoLogin=()=>ajax({
     needToken: true
   }
 })
+//8获取某个商家信息
+export const reqGoods=()=>ajax('/goods')
+//9获取某个商家评价数组
+export const reqRatings=()=>ajax('/ratings')
+//10获取商家商品数组
+export const reqInfo=()=>ajax('/info')
+
+reqInfo().then(result => {
+  console.log('result', result)
+})
 //测试接口
 // reqAddress('40.10038','116.36867').then((result) => {
 //     console.log('result', result)

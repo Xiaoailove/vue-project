@@ -1,5 +1,15 @@
 //包含n个直接更新状态数据的方法
-import {RECEIVE_ADDRESS,RECEIVE_CATEGORYS,RECEIVE_SHOPS,RECEIVE_USER,RESET_USER,RECEIVE_TOKEN,RESET_TOKEN} from './mutations-types'
+import {RECEIVE_ADDRESS,
+				RECEIVE_CATEGORYS,
+				RECEIVE_SHOPS,
+				RECEIVE_USER,
+				RESET_USER,
+				RECEIVE_TOKEN,
+				RESET_TOKEN,
+				RECEIVE_GOODS,
+				RECEIVE_RATINGS,
+				RECEIVE_INFO
+			} from './mutations-types'
 export default {
     [RECEIVE_ADDRESS] (state,address) {
 			state.address=address
@@ -10,6 +20,8 @@ export default {
 		[RECEIVE_SHOPS] (state,shops) {
 			state.shops=shops
 		},
+
+
 		[RECEIVE_USER] (state,user) {
 			state.user=user
 		},
@@ -21,5 +33,16 @@ export default {
 		},
 		[RESET_TOKEN] (state) {
 			state.token=''
+		},
+
+		[RECEIVE_GOODS] (state,goods) {
+			state.goods=goods
+		},
+		[RECEIVE_RATINGS] (state,ratings) {
+			state.ratings=ratings
+		},
+		[RECEIVE_INFO] (state,info) {
+			state.info=info
 		}
+
 }
