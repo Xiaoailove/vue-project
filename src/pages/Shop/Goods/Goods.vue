@@ -1,9 +1,12 @@
 <template>
   <div>
     <div class="goods">
+
+
     <div class="menu-wrapper" ref="left">
-      <ul>
-        <li class="menu-item current" v-for="(good) in goods" :key="good.name">
+      <ul ref="leftUl">
+        <li class="menu-item" :class="{current:currentIndex===index}" 
+        v-for="(good,index) in goods" :key="good.name"  @click="selectItem(index)">
           <span class="text bottom-border-1px">
             <img class="icon" :src="good.icon" v-show="good.icon">
             {{good.name}}
@@ -11,8 +14,10 @@
         </li>
       </ul>
     </div>
+
+
     <div class="foods-wrapper" ref="right">
-      <ul>
+      <ul ref="rightUl">
         <li class="food-list-hook" v-for="(good) in goods" :key="good.name">
           <h1 class="title">{{good.name}}</h1>
           <ul>
@@ -32,7 +37,7 @@
                   <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  CartControl组件
+                  <CartControl :food="food"/>
                 </div>
               </div>
             </li>
@@ -40,6 +45,8 @@
         </li>
       </ul>
     </div>
+
+    <ShopCart></ShopCart>
   </div>
 </div>
 </template>
@@ -47,23 +54,84 @@
 <script type="text/ecmascript-6">
 import {mapState} from 'vuex'
 import BScroll from 'better-scroll'
+import ShopCart from '../../../components/ShopCart/ShopCart.vue'
   export default {
+    data () {
+      return {
+        scrollY:0,
+        tops:[]
+      }
+    },
     computed:{
       ...mapState({
         goods:state=>state.shop.goods
-      })
+      }),
+      currentIndex () {
+        const {tops,scrollY}=this
+        const index=tops.findIndex((top,index)=>scrollY>=top && scrollY<tops[index+1])
+        if(index != this.index && this.leftScroll){
+          this.index=index
+          const li=this.$refs.leftUl.children[index]
+          this.leftScroll.scrollToElement(li,500)
+        }
+         return index
+      }
     },
+    //这个是为了解决从当前组件跳到另一个组件然后再回到当前组件，此时数据回来了，压根没更新也就是说watch没有被调用所以我们不能使用库
+    mounted () {
+      if(this.goods.length>0){
+        this._initScroll()
+        this._initTops()
+      }    
+    },
+    methods:{
+      _initScroll () {
+        this.leftScroll=new BScroll(this.$refs.left,{})
+        this.rightScroll=new BScroll(this.$refs.right,{
+          click:true,
+          probeType: 1
+        })
+        //给右侧列表绑定滑动事件
+        this.rightScroll.on('scroll',({x,y})=>{
+          this.scrollY=Math.abs(y)
+        })
+        this.rightScroll.on('scrollEnd',({x,y})=>{
+          this.scrollY=Math.abs(y)
+        })
+      },
+      _initTops () {
+        const tops=[]
+        let top=0
+        tops.push(top)
+        console.log(this.$refs.rightUl)
+      
+        const lis=this.$refs.rightUl.children
+        console.log(lis)
+        Array.prototype.forEach.call(lis,li=>{
+          top+=li.clientHeight
+          tops.push(top)
+        })
+        this.tops=tops
+        //console.log(tops)
+      },
+      selectItem (index) {
+        const top=this.tops[index]
+        //立即更新右侧滑动到列表的位置
+        this.scrollY=top
+        this.rightScroll.scrollTo(0,-top,500)
+      }
+    },
+    //BScroll这个库和swiper是一样的需要在数据回来且列表显示之后才能正常使用
     watch:{
       goods () {
         this.$nextTick(()=>{
-          new BScroll(this.$refs.left,{
-
-          })
-          new BScroll(this.$refs.right,{
-            
-          })
+          this._initScroll()
+          this._initTops()
         })
       }
+    },
+    components:{
+      ShopCart
     }
   }
 </script>
