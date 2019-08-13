@@ -21,7 +21,8 @@
         <li class="food-list-hook" v-for="(good) in goods" :key="good.name">
           <h1 class="title">{{good.name}}</h1>
           <ul>
-            <li class="food-item bottom-border-1px" v-for="(food) in good.foods" :key="food.name">
+            <li class="food-item bottom-border-1px" v-for="(food) in good.foods" :key="food.name"
+              @click="showFood(food)">
               <div class="icon">
                 <img width="57" height="57"
                      :src="food.icon">
@@ -48,6 +49,7 @@
 
     <ShopCart></ShopCart>
   </div>
+  <Food ref="food" :food="food" />
 </div>
 </template>
 
@@ -55,11 +57,13 @@
 import {mapState} from 'vuex'
 import BScroll from 'better-scroll'
 import ShopCart from '../../../components/ShopCart/ShopCart.vue'
+import Food from '../../../components/Food/Food.vue'
   export default {
     data () {
       return {
         scrollY:0,
-        tops:[]
+        tops:[],
+        food:{}
       }
     },
     computed:{
@@ -119,6 +123,10 @@ import ShopCart from '../../../components/ShopCart/ShopCart.vue'
         //立即更新右侧滑动到列表的位置
         this.scrollY=top
         this.rightScroll.scrollTo(0,-top,500)
+      },
+      showFood (food) {
+        this.food=food
+        this.$refs.food.toggleShow()
       }
     },
     //BScroll这个库和swiper是一样的需要在数据回来且列表显示之后才能正常使用
@@ -131,7 +139,8 @@ import ShopCart from '../../../components/ShopCart/ShopCart.vue'
       }
     },
     components:{
-      ShopCart
+      ShopCart,
+      Food
     }
   }
 </script>
