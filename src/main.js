@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import {Button} from 'mint-ui'
+import VueLazyload from 'vue-lazyload'
 import App from './App.vue'
 import router from './router'
 import Header from 'components/Header/Header.vue'//注册全局头部组件
@@ -9,12 +10,18 @@ import CartControl from 'components/Cartcontrol/Cartcontrol.vue'
 import store from './store'
 import './validate'  //全局引入之后也就是说我全局多了一个validate的指令供我使用但是我没有向外面暴露什么所以不用上面的写法
 import './mock/mock-serve'
+import loading from './common/loading.gif'
 
 Vue.config.productionTip = false//禁止在启动vue的时候产生提示，去掉打印提示
 Vue.component('Header',Header)//注册全局头部组件
 Vue.component('Star',Star)
 Vue.component(Button.name, Button)//注册mintui全局使用的标签组件对象
 Vue.component('CartControl',CartControl)
+
+
+Vue.use(VueLazyload,{
+  loading
+})
 new Vue({
   //第一种方式：引入一个带编译器的文件在脚手架配置文件里面
   // components: {
